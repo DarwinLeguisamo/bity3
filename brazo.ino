@@ -2,41 +2,65 @@
 Servo brazo;
 Servo mano;
 Servo pinza;
-//Servo rueda2;
-void setup()
-{
-// pinMode(13,INPUT);
- brazo.attach(8);
-  pinza.attach(2);
-mano.attach(9); // indico donde esta mi servo conectado 
- //rueda2.attach(6); 
- brazo.write(90);
- mano.write(90);
- pinza.write(90);
- delay(500);
- aumentar_angulo(140,pinza,100);
-}
-
-void loop()
-{
- aumentar_angulo(140,brazo,50);// parametros grados, servo usado, delay del cambio de grado. Baja el brazo
- aumentar_angulo(180,mano,50);  //baja la mano
- disminuir_angulo(20,pinza,50); // cierra pinza
-
- disminuir_angulo(50,brazo,50);
- disminuir_angulo(10,mano,50);
- aumentar_angulo(140,pinza,100);
+int DirA=12;
+int DirB=13;
+int PotA=3;
+int PotB=11;
+bool imprimir=true; 
+void setup() {
+    brazo.attach(8);
+    pinza.attach(2);
+    mano.attach(9); // indico donde esta mi servo conectado 
  
- /*
- if (digitalRead(2)) 
- {rueda.write(0); // mando el servo a 0
-  delay(1500);// espero medio segundo
- }
- else{
-  rueda.write(180); // mando el servo a 90
-  delay(1500);}
-*/  
+    brazo.write(90);
+    mano.write(90);
+    pinza.write(90);
+    delay(500);
+    aumentar_angulo(140,pinza,100);
+    pinMode(DirA,OUTPUT);
+    pinMode(DirB,OUTPUT);
+    pinMode(PotA,OUTPUT);
+    pinMode(PotB,OUTPUT);
+    Serial.begin(9600);
+
+  // put your setup code here, to run once:
+
 }
+
+void loop() {
+  if (imprimir){ // imprime solo cuando imprimir es true
+    Serial.print(analogRead(A2));
+    Serial.print("....");
+    Serial.print(analogRead(A3));
+    Serial.print("/////");
+     Serial.print(analogRead(A4));
+    Serial.print("....");
+    Serial.println(analogRead(A5));}
+    delay(300);
+  }
+else{
+ // acá va el programa cuando no imprimo
+}
+  
+  // put your main code here, to run repeatedly:
+
+
+
+void atras(int v){
+    digitalWrite(DirA,LOW);
+    digitalWrite(DirB,HIGH);
+    analogWrite(PotA,v);
+    analogWrite(PotB,v);
+  
+  }
+void parar(){
+    digitalWrite(DirA,LOW);
+    digitalWrite(DirB,HIGH);
+    analogWrite(PotA,0);
+    analogWrite(PotB,0);
+  
+  }
+
 
 void aumentar_angulo (int angulo, Servo servo,int tiempo){
   int actual=servo.read();
